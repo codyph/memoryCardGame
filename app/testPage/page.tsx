@@ -1,9 +1,9 @@
-import getPokemon from "@/actions/getPokemon";
+import getColorPalette from "@/actions/getColorPalette";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
 const page = async () => {
-  const cheese = await getPokemon(55);
+  const cheese = await getColorPalette(55);
 
   const colorStrings: string[] = cheese.map((color: Number[]) => {
     return String(color);

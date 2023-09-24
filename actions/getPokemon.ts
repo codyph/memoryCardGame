@@ -1,22 +1,13 @@
-const getPokemon = async (id: number) => {
-  const data = {
-    model: 'ui',
-    input: ['N', 'N', [141, 172, 187], 'N', 'N'],
-  }
+import useColorAPI from "@/hooks/useColorAPI"
+import usePokeInfoApi from "@/hooks/usePokeInfoApi"
+import usePokeSpeciesApi from "@/hooks/usePokeSpeciesApi"
 
-  const colorSimp = await fetch("http://colormind.io/api/", 
-  {method: 'POST', body: JSON.stringify(data)}).then(
-    res => res.json()).then(
-        (palette) => palette.result)
+const getPokemon = ({ cardId }: { cardId: number }) => {
+  const pokeInfo = usePokeInfoApi(cardId)
+  const speciesInfo = usePokeSpeciesApi(cardId)
+  // const colorInfo = useColorAPI( speciesInfo.color )
+  const colorInfo = useColorAPI(pokeInfo.typeList[0])
 
-
-  console.log(" ");
-  console.log("-----------------------------");
-  console.log(" ");
-  console.log("COLOR DATA");
-  console.log(colorSimp)
-
-  return colorSimp;
-};
-
-export default getPokemon;
+  return { pokeInfo, speciesInfo, colorInfo }
+}
+export default getPokemon

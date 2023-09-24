@@ -1,60 +1,99 @@
 import { useEffect, useState } from "react"
 
-export default function useColorAPI(color: string) {
-  const [colorPalette, setColorPalette] = useState()
+const useColorAPI = (color: string) => {
+  console.log("useColorAPI Hook")
+  const [colorPalette, setColorPalette] = useState([""])
 
-  const initialRGB = pokeColors(color)
+  const colorData = {
+    model: "ui",
+    input: ["N", "N", pokeColors(color), "N", "N"],
+  }
+
+  const fetchColorInfo = () => {
+    fetch("http://colormind.io/api/", {
+      method: "POST",
+      body: JSON.stringify(colorData),
+    })
+      .then((res) => res.json())
+      .then((palette) => {
+        console.log(palette.result)
+        setColorPalette([...palette.result])
+      })
+  }
 
   useEffect(() => {
     let ignore = false
-
-    const colorData = {
-      model: "ui",
-      input: ["N", "N", initialRGB, "N", "N"],
+    if (!color) {
+      console.log("DISMOUNT: UNDEFINED COLOUR")
+      return
     }
 
-    const fetchData = async () => {
-      fetch("http://colormind.io/api/", {
-        method: "POST",
-        body: JSON.stringify(colorData),
-      })
-        .then((res) => res.json())
-        .then((palette) => {
-          if (!ignore) {
-            setColorPalette(palette.result)
-          }
-        })
+    !ignore && fetchColorInfo()
+
+    return () => {
+      ignore = true
+      console.log("DISMOUNT: COLOUR HOOK")
     }
-
-    fetchData()
-
-    return () => {ignore = true}
-
   }, [color])
 
   return colorPalette
 }
 
-function pokeColors(color: string) {
+export default useColorAPI
+
+export function pokeColors(color: string) {
   switch (color) {
     case "black":
-      return ""
+    case "shadow":
+      return [27, 27, 27]
     case "blue":
-      return [66, 122, 161]
+    case "water":
+      return [0, 112, 187]
     case "brown":
-      return ""
+    case "ground":
+      return [129, 97, 62]
     case "gray":
-      return ""
+    case "normal":
+      return [122, 123, 128]
+    case "green":
+    case "grass":
+      return [3, 128, 40]
     case "pink":
-      return ""
+    case "fairy":
+      return [230, 131, 157]
     case "purple":
-      return ""
+    case "poison":
+      return [141, 43, 217]
     case "red":
-      return [223, 41, 53]
+    case "fire":
+      return [206, 32, 41]
     case "white":
-      return ""
+      return [194, 194, 194]
     case "yellow":
-      return ""
+    case "electric":
+      return [166, 126, 25]
+    case "rock":
+      return [188, 189, 132]
+    case "fighting":
+      return [199, 122, 46]
+    case "psychic":
+      return [224, 65, 145]
+    case "ghost":
+      return [97, 52, 133]
+    case "flying":
+      return [102, 184, 217]
+    case "dragon":
+      return [49, 82, 181]
+    case "ice":
+      return [42, 192, 209]
+    case "bug":
+      return [131, 156, 40]
+    case "steel":
+      return [92, 151, 181]
+    case "dark":
+      return [41, 33, 26]
+    case "unknown":
+      return [73, 156, 134]
     default:
       return ""
   }
