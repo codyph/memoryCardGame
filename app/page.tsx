@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  function handleLinkClick(href: string) {
-    router.push(href);
+  function handePlayGameClick() {
+    router.push("game");
   }
 
   return (
@@ -25,7 +25,7 @@ export default function Home() {
         <br />
         <div className="flex flex-col items-center justify-center  rounded-[25px] border bg-slate-500 p-6 text-center drop-shadow-md lg:h-[33%] lg:text-lg">
           <p className="font-light">
-            Pick a pokemon card you haven't seen before: Move onto the next
+            Pick a pokemon card you haven't seen before, and you'll move onto the next
             round.{" "}
           </p>
           <br />
@@ -41,7 +41,7 @@ export default function Home() {
         <Button
           className=""
           disabled={false}
-          onClick={() => handleLinkClick("game")}
+          onClick={handePlayGameClick}
         >
           Play Game
         </Button>
