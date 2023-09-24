@@ -1,8 +1,16 @@
-import React from 'react'
+interface HeaderProps {
+  score: number
+  bestScore: number,
+}
 
-const Header = () => {
+const Header: React.FC<HeaderProps> = ({ score, bestScore, }) => {
   return (
-    <div>Header</div>
+    <div>
+      <div className="flex justify-between lg:justify-evenly text-lg font-semibold md:text-4xl md:p-20 text-center px-6 pt-6">
+        <h1 className="">Score: {score}</h1>
+        <h1 className="">Best: {bestScore}</h1>
+      </div>
+    </div>
   )
 }
 

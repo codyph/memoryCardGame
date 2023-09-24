@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 
 const useColorAPI = (color: string) => {
-  console.log("useColorAPI Hook")
   const [colorPalette, setColorPalette] = useState([""])
 
   const colorData = {
     model: "ui",
-    input: ["N", "N", pokeColors(color), "N", "N"],
+    // input: ["N", "N", pokeColors(color), "N", "N"],
+    input: [[255, 255, 255], "N", pokeColors(color), "N", [0, 0, 0]],
   }
 
   const fetchColorInfo = () => {
@@ -16,7 +16,6 @@ const useColorAPI = (color: string) => {
     })
       .then((res) => res.json())
       .then((palette) => {
-        console.log(palette.result)
         setColorPalette([...palette.result])
       })
   }
@@ -24,7 +23,6 @@ const useColorAPI = (color: string) => {
   useEffect(() => {
     let ignore = false
     if (!color) {
-      console.log("DISMOUNT: UNDEFINED COLOUR")
       return
     }
 
@@ -32,7 +30,6 @@ const useColorAPI = (color: string) => {
 
     return () => {
       ignore = true
-      console.log("DISMOUNT: COLOUR HOOK")
     }
   }, [color])
 

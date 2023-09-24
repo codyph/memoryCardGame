@@ -5,25 +5,30 @@ import { pokeColors } from "@/hooks/useColorAPI"
 import Image from "next/image"
 
 interface CardProps {
-  cardId: number
+  cardId: number,
+  onClick?: () => void
 }
 
-const Card: React.FC<CardProps> = ({ cardId }) => {
+const Card: React.FC<CardProps> = ({ cardId, onClick }) => {
   const { pokeInfo, speciesInfo, colorInfo } = getPokemon({ cardId })
 
   return (
-    <div className="flex p-[5%]">
+    <div className="flex p-[4%] md:p-[2%]">
       <div
-        className="m-auto flex h-96 w-64 flex-col rounded-3xl p-2"
+        onClick={onClick}
+        className="m-auto flex h-80 w-52 flex-col rounded-3xl p-2 md:h-[420px] md:w-[280px] hover:scale-[110%] transition drop-shadow-md"
         style={{
           backgroundColor: `rgb(${colorInfo[3]})`,
           border: `6px solid rgb(${colorInfo[1]})`,
         }}
       >
-        <div title="mainBox" className="mx-1 flex flex-col">
-          <div title="cardHeader" className="flex flex-col justify-between gap-y-1">
+        <div title="mainBox" className="mx-1 flex flex-col gap-y-1">
+          <div
+            title="cardHeader"
+            className="flex flex-col justify-between gap-y-1"
+          >
             <h1
-              className="text-xl font-semibold capitalize tracking-wide drop-shadow-md text-center"
+              className="text-center text-xl font-semibold capitalize tracking-wide drop-shadow-md"
               style={{
                 color: `rgb(${colorInfo[0]})`,
               }}
@@ -31,29 +36,29 @@ const Card: React.FC<CardProps> = ({ cardId }) => {
               {pokeInfo.name}
             </h1>
             <div className="flex justify-between">
-            <p
-              className="rounded-full px-3 py-0.5 text-center w-fit"
-              style={{
-                backgroundColor: `rgb(${colorInfo[1]})`,
-                color: `rgb(${colorInfo[0]})`
-              }}
-            >
-              HP: {pokeInfo.hp}
-            </p>
-            <p
-              className="rounded-full px-3 py-0.5 text-center w-fit"
-              style={{
-                backgroundColor: `rgb(${colorInfo[1]})`,
-                color: `rgb(${colorInfo[0]})`
-              }}
-            >
-              ATK: {pokeInfo.atk}
-            </p>
+              <p
+                className="w-fit rounded-full px-3 py-0.5 text-center"
+                style={{
+                  backgroundColor: `rgb(${colorInfo[1]})`,
+                  color: `rgb(${colorInfo[0]})`,
+                }}
+              >
+                HP: {pokeInfo.hp}
+              </p>
+              <p
+                className="w-fit rounded-full px-3 py-0.5 text-center"
+                style={{
+                  backgroundColor: `rgb(${colorInfo[1]})`,
+                  color: `rgb(${colorInfo[0]})`,
+                }}
+              >
+                ATK: {pokeInfo.atk}
+              </p>
             </div>
           </div>
           <div
             title="image"
-            className="relative flex h-[144px] w-full items-center justify-center py-2"
+            className="relative flex h-[144px] w-full items-center justify-center"
           >
             <Image
               className="rounded-3xl object-contain drop-shadow-[0_10px_5px_rgba(0,0,0,0.15)]"
@@ -78,7 +83,10 @@ const Card: React.FC<CardProps> = ({ cardId }) => {
             })}
           </div>
         </div>
-        <div title="descBox" className="flex h-full items-center overflow-auto">
+        <div
+          title="descBox"
+          className="hidden h-full items-center overflow-auto md:flex"
+        >
           <p
             style={{
               color: `rgb(${colorInfo[0]})`,
