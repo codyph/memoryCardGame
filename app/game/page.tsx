@@ -4,50 +4,102 @@ import Button from "@/components/Button"
 import Card from "@/components/Card"
 import Header from "@/components/Header"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+
+function getRandomIds(list1: number[]) {
+  const randomId = Math.floor(Math.random()*list1.length) + list1[0]
+  return randomId
+}
+
+function shuffleArray(array: number[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i + 1))
+    const temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+  return array
+}
+
+let initRound = true
 
 const GamePage = () => {
   const router = useRouter()
   const numberOfIds = 1000
+  const randomIdsForNow = Array.from({ length: 10 }, (_, i) => i + 1)
   const pokemonIDs = Array.from({ length: numberOfIds }, (_, i) => i + 1)
 
+  const [pokeIds, setPokeIds] = useState(Array.from({ length: numberOfIds }, (_, i) => i + 1))
   const [currentScore, setCurrentScore] = useState(0)
   const [bestScore, setBestScore] = useState(0)
   const [selected, setSelected] = useState(Array(numberOfIds).fill(0))
   const [idsInPlay, setIdsInPlay] = useState([1, 2])
 
-  function handleCardSelect(selectedCardId: number) {
-    if (selected[selectedCardId - 1] !== pokemonIDs[selectedCardId - 1]) {
-      const newList = [...selected]
-      newList[selectedCardId - 1] = selectedCardId
 
-      setSelected([...newList])
+  useEffect(() => {
+      let ignore = false
+      const fetchRound = () => {
+        !ignore && nextRound()
+      }
+      fetchRound()
+
+      return () => {
+        ignore = true
+      }
+  }, [currentScore])
+
+  function handleCardSelect(selectedCardId: number) {
+    if (selected[selectedCardId - 1] === 0) {
+      // Haven't previously selected
+      const newSelectedList = selected.map((id, index) => {
+        if (index === selectedCardId - 1) {
+          return selectedCardId
+        } else {
+          return id
+        }
+      })
+
+      const removeSelectedId = pokeIds.map((id, index) => {
+        if (index === selectedCardId - 1) {
+          return 0
+        } else {
+          return id
+        }
+      })
+
+      setSelected(newSelectedList)
+      setPokeIds(removeSelectedId)
       updateScore()
-      nextRound()
     } else {
+      // Selected previously
       gameOver()
+
     }
   }
 
   function updateScore() {
     setCurrentScore((c) => c + 1)
-    if (currentScore > bestScore) {
-      setBestScore(currentScore)
+    if (currentScore + 1 > bestScore) {
+      setBestScore(bs => bs + 1)
     }
   }
 
   function nextRound() {
-    const getSelectedIds = selected.filter((s) => s !== 0)
-    console.log(getSelectedIds)
-    const randomSelectedId =
-      getSelectedIds[Math.floor(Math.random() * getSelectedIds.length)]
-    const randomPokemonId = Math.floor(Math.random() * numberOfIds)
+    const pokeIdsLeft = pokeIds.filter(pI => pI !== 0)
+    const shuffledPokeIds = shuffleArray(pokeIdsLeft)
 
-    const idList = [randomSelectedId, randomPokemonId]
+    const selectedIds = () => { 
+      const sIds = selected.filter(s => s !== 0)
+      if (!sIds[0]) {
+        return [shuffledPokeIds[1]]
+      }
+      return sIds
+    }
+    const randomlySelectedId = shuffleArray(selectedIds())[0]
 
-
-    setIdsInPlay([...idList])
-
+    setIdsInPlay(shuffleArray([randomlySelectedId, shuffledPokeIds[0]]))
+    
   }
 
   function handleHomeClick() {
@@ -60,26 +112,20 @@ const GamePage = () => {
     setCurrentScore(0)
   }
 
-  const getRandomID = (list: number[]) => {
-    const randomId = list[Math.floor(Math.random() * list.length)]
-    // setListOfPickedIds(randomId)
-  }
-
   return (
     <div>
       <Header score={currentScore} bestScore={bestScore} />
       <div className="flex flex-col items-center">
         <div className="flex w-screen flex-col justify-center md:h-[50%] md:flex-row">
-          <Card cardId={idsInPlay[0]} onClick={() => handleCardSelect(idsInPlay[0])} />
-          <Card cardId={idsInPlay[1]} onClick={() => handleCardSelect(idsInPlay[1])} />
+          {idsInPlay.map((id) => {
+            return <Card key={id} cardId={id} onClick={() => handleCardSelect(id)}/>
+          })}
         </div>
         <Button disabled={false} className="w-48" onClick={handleHomeClick}>
           {" "}
           Home{" "}
         </Button>
       </div>
-      {idsInPlay.map(id => <p>{id}</p>)}
-      <p className="flex overflow-hidden">{selected}</p>
     </div>
   )
 }

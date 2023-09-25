@@ -25,7 +25,7 @@ export default function Home() {
         <br />
         <div className="flex flex-col items-center justify-center  rounded-[25px] border bg-slate-500 p-6 text-center drop-shadow-md lg:h-[33%] lg:text-lg">
           <p className="font-light">
-            Pick a pokemon card you haven't seen before, and you'll move onto the next
+            Pick a pokemon card you haven&apos;t seen before, and you&apos;ll move onto the next
             round.{" "}
           </p>
           <br />
