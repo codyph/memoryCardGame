@@ -1,5 +1,7 @@
 # Memory Shmemory
-Check the website out [here](https://memory-shmemory-game.vercel.app/game)!
+Check the website out [here](https://memory-shmemory-game.vercel.app/game)! \
+\
+Sadly, I only found out after deploying that the ColorAPI is an HTTP site. In other words, any HTTPS site, which is any secure site, will block its request unless otherwise directed. This is a good thing to know for future reference!
 
 ## Example Images in Web View
 ### Home Screen
